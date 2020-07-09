@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html ng-app="plunker">
+
+  <head>
+    <title>Whiteboard</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="style.css">
+    <script data-require="angular.js@1.4.x" src="https://code.angularjs.org/1.4.12/angular.js" data-semver="1.4.9"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body ng-controller="MainCtrl">
+   <header>
+      <span id ="heading">Whiteboard</span>
+        <form id="login" ng-show="displayLogin">
+          <table>
+            <tr>
+              <td> Username</td>
+              <td> Password</td>
+            </tr>
+            <tr>
+              <td> <input type="text" ng-model="Username"></td>
+              <td> <input type="password" ng-model="Password"></td>
+              <td> <input type="submit" value="Login" ng-click="Login()"></td>
+            </tr>
+              <td> <input type="radio" name="domainbutton" id="student_domain" value="student" ng-model="userNameValue" checked>Student</td> 
+              <td> <input type="radio" name="domainbutton" id="lecturer_domain" value="lecturer" ng-model="userNameValue">Lecturer</td>
+          </table>
+        </form>
+        <span id="logoutContainer" ng-show="displayLogout">
+          <p>Welcome {{name}}</p>
+          <button ng-click="logout()">Logout</button>
+        </span>
+    </header>
+
+<div id="container" ng-show="displayButtons"> 
+  <div id="subNav">
+      <ul>
+       <li><button ng-click="showDirectory()">Course Directory</button></li>
+        <li><button ng-click="showFeed()" ng-show="studentDisplay">My Courses</button></li>
+        <li><span class="success" ng-bind="successFeedback"></span></li>
+      </ul>
+    </div> 
+
+    <!--COURSE DIR (STUDENT & LECTURE (DIFF PERMISSIONS PER ACCOUNT))-->
+    <div class="pageContent" id="courseDirectory" ng-show="displayDirectory">
+      <div id="directoryHead">  
+        <div id="titleContainer">    
+          <h1>Course Directory</h1>
+        </div>
+        <div id=indvCourseButtons>
+          <button ng-click="newCourse()" ng-show="staffDisplay">Add Course</button><!--STAFF ONLY-->
+        </div>
+      </div>
+      <div class="courseEntry" ng-repeat="item in allCourseData" ng-click="selectCourse($index)">
+        <span class="courseInfoTitle">{{item.ID}}</span><span class="courseInfoTri"> Trimester {{item.Trimester}} {{item.Year}}</span>
+        <br>
+        <b>{{item.Name}}</b><!--bad ik, but lazy-->
+      </div>
+    </div>
+
+
+
+    <!--COURSE FEED (STUDENT ACC ONLY)-->
+    <div class="pageContent" id="courseFeed" ng-show="displayFeed">      
+      <h1>Course Feed</h1>
+      <div class="courseEntry" ng-repeat="item in allFeedData">
+        <div ng-click="selectCourse($index)">
+        <span class="courseInfoTitle">{{item.ID}}</span><span class="courseInfoTri"> Trimester {{item.Trimester}} {{item.Year}}</span>
+        <br>
+        <b>{{item.Name}}</b>
+      </div>
+        <button ng-click="deleteFromFeed($index)">Remove from Feed</button>
+      </div>
+    </div>
+
+    <!--INDV COURSE PAGE (PERMISSIONS DIFFERENT PER ACCOUNT)-->
+    <div class="pageContent" id="indvCOURSE" ng-show="displayindvcourse">     
+      <div id="indvCourseHead"> 
+        <h1>{{currentCourse.ID}} : {{currentCourse.Name}}</h1>
+        <div id=indvCourseButtons>
+          <button ng-click="editCourse()" ng-show="staffDisplay">Edit</button><!--STAFF ONLY-->
+          <button ng-click="deleteCourse()" ng-show="staffDisplay">Delete</button><!--STAFF ONLY-->
+          <button ng-click="addToFeed()" ng-show="studentDisplay">Add to Feed</button><!--STUDENT ONLY-->
+        </div>
+      </div>
+      <div id="indvCourseOtherInfo"><span>Lecturer: {{currentLect}} &nbsp&nbsp Trimester {{currentCourse.Trimester}} {{currentCourse.Year}} &nbsp&nbsp Times: {{currentCourse.LectureTimes}}</span></div><!--cheating here (reformat spacing container)-->
+      <div id="courseDescAssignSplit">
+        <div id="indvCourseInfo" ng-bind="currentCourse.Overview"></div>
+
+        <div id="assignmentContainer">
+          <h2 id="assignmentTitle">Assignments:</h2>
+          <div class="assignment" ng-repeat="item in currentAssignmentInfo">
+            <div id="indvCourseHead">
+              <h1>{{item.Name}}</h1>
+              <span class="assignTimes">Due: {{item.dateString}}</span>
+              <button class="assignbutton" ng-click="editAssignment(item.ID)"  ng-show="staffDisplay">Edit</button>
+              <button class="assignbutton"  ng-show="staffDisplay" ng-click="deleteAssign($index)">Delete</button>
+            </div>
+            <input type="checkbox" name="{{item.Name}}" value="{{item.Name}}">
+            <label for="{{item.Name}}"> {{item.Overview}}</label><br>
+          </div>
+          <button ng-show="staffDisplay" ng-click='addAssignment()'>Add Assignment</button>
+        </div>
+        <div style="clear:both"></div><!--get height-->
+      </div>
+      <span ng-bind="errorFeedback" class="error"></span>
+    </div>
+
+    <!--EDIT ASSIGNMENT INFO (LECT)-->
+    <div class="pageContent" id="editCourse" ng-show="displayeditassign">
+      <h1>Edit Assignment: </h1>
+      <div id="editCourseContainer"><form id="editCourseForm">
+        <div class="editCourseEntryContainer"> 
+          <span>Assignment Name: </span>
+          <input type="text" placeholder="Assignment Name" name="aName" ng-model="assignNameEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Due Date:</span>
+          <input type="datetime-local" name="assignDate" placeholder=Trimester ng-model="assignDateEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <div>Assignment Description:</div>
+          <textarea rows = "5" cols = "60" name = "cDesc" placeholder="Assignment Description" ng-model="assignDescEdit"></textarea><br>
+        </div>
+        <input type="submit" value="Update" ng-click="updateAssign()">        <!--update-->
+      </form></div>
+      <span ng-bind="errorFeedback" class="error"></span>
+    </div>
+
+    <!--ADD NEW ASSIGNMENT (LECT)-->
+    <div class="pageContent" id="editCourse" ng-show="displaynewassign">
+      <h1>New Assignment: </h1>
+      <div id="editCourseContainer"><form id="editCourseForm">
+        <div class="editCourseEntryContainer"> 
+          <span>Assignment Name: </span>
+          <input type="text" placeholder="Assignment Name" name="aName" ng-model="assignNameEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Due Date:</span>
+          <input type="datetime-local" name="assignDate" placeholder=Trimester ng-model="assignDateEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <div>Assignment Description:</div>
+          <textarea rows = "5" cols = "60" name = "cDesc" placeholder="Assignment Description" ng-model="assignDescEdit"></textarea><br>
+        </div>
+        <input type="submit" value="Add" ng-click="addNewAssign()">        <!--update-->
+      </form></div>
+      <span ng-bind="errorFeedback" class="error"></span>
+    </div>
+
+
+    <!--EDIT COURSE INFO (LECTURER ONLY)-->
+    <div class="pageContent" id="editCourse" ng-show="displayeditcourse">
+      <h1>Edit Course: {{courseCodeEdit}}</h1>
+
+      <div id="editCourseContainer"><form id="editCourseForm">
+        <div class="editCourseEntryContainer"> 
+          <span>Course Name: </span>
+          <input type="text" placeholder="Course Name" name="cName" ng-model="courseNameEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Trimester:</span>
+          <input type="number" min="1" max="3" step="1" name="cTri" placeholder=Trimester ng-model="trimesterEdit">
+          <span>Year:</span>
+          <input type="number" min="2015" max="2099" step="1" name="cYear" placeholder="Year" ng-model="yearEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Lecturer Name:</span>
+          <select ng-model="lectureEdit" ng-options="y.name for (x, y) in lectureInfo"></select><br>
+        </div>
+        <div class="editCourseEntryContainer">
+          <div>Course Description:</div>
+          <textarea rows = "5" cols = "60" name = "cDesc" placeholder="Cource Description" ng-model="courseDescEdit"></textarea><br>
+        </div>
+        <input type="submit" value="Update" ng-click="updateCourse($index)">        
+      </form></div>
+      <span ng-bind="errorFeedback" class="error"></span>
+    </div>
+
+    <!--ADD COURSE (LECTURER ONLY)-->
+    <div class="pageContent" id="addCourse" ng-show="displayaddcourse">
+      <h1>Add Course: </h1>
+      <div id="editCourseContainer"><form id="editCourseForm">
+        <div class="editCourseEntryContainer"> 
+          <span>Course Name: </span>
+          <input type="text" name="cName" ng-model="courseNameEdit">
+        </div>
+        <div class="editCourseEntryContainer"> 
+          <span>Course ID: </span>
+          <input type="text" name="cID" ng-model="courseCodeEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Trimester:</span>
+          <input type="number" min="1" max="3" step="1" name="cTri" ng-model="trimesterEdit">
+          <span>Year:</span>
+          <input type="number" min="2015" max="2099" step="1" name="cYear" ng-model="yearEdit">
+        </div>
+        <div class="editCourseEntryContainer"> 
+          <span>Lecture Time: </span>
+          <input type="text" name="cLectTimes" ng-model="lectTimesEdit">
+        </div>
+        <div class="editCourseEntryContainer">
+          <span>Lecturer Name:</span>
+          <select ng-model="lectureEdit" ng-options="y.name for (x, y) in lectureInfo"></select><br>
+        </div>
+        <div class="editCourseEntryContainer">
+          <div>Course Description:</div>
+          <textarea rows = "5" cols = "60" name = "cDesc" placeholder="Cource Description" ng-model="courseDescEdit"></textarea><br>
+        </div>
+        <input type="submit" value="Add" ng-click="addValidCourse()">        
+      </form></div>
+      <span ng-bind="errorFeedback" class="error"></span>
+    </div>
+
+
+</div>
+
+<footer id="footer"> 
+  <a href="https://www.wgtn.ac.nz/its/about/contact-us">Forgotten Password?</a>
+</footer>
+
+</body>
+</html>

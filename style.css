@@ -1,0 +1,211 @@
+/** FRONT PAGE OF SINGLE PAGE WEB APP**/
+*     {
+  margin: 0;
+  padding: 0;
+  font-size: 16px;
+}
+
+body {
+  /**background-color: #3D85C6; rgb (61, 133, 198) sky blue**/
+  background-color: #f5f5f5; /**rgb (245, 245, 245) smokey white**/
+  font-family: 'PT Sans', sans-serif;/**changed this so compatable on all devices (same font) may need to download font package**/
+}
+
+/**PAGE HEADER**/
+header {
+  background-color: #3a3d38; /**rgb (58,61,56) smokey grey black**/
+  letter-spacing: 3px;
+  color: white;
+  padding: 40px;
+  border-bottom: 8px solid #3D85C6;
+}
+/**Title "whiteboard"**/
+#heading {
+  font-size: 60px;
+  font-weight: bold;
+}
+
+form#login{
+  float: right;
+  margin-right: 30px;
+  letter-spacing: 1px;
+  font-size: 15px;
+}
+
+span#logoutContainer{
+  float: right;
+}
+
+/**PAGE CONTENT (CONTAINER)**/
+#container{
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+/*Button Navigation*/
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+  /*TRBL*/
+  padding: 25px 20px 0px 0px;
+}
+
+/* Directory */
+#directoryHead{
+  height: 40px;
+}
+
+#titleContainer{
+  display: inline-block;
+  margin-left: 40%;
+}
+
+
+/*content styles*/
+#subNav, .pageContent{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 10px;
+}
+.pageContent{  
+  box-shadow: 3px 3px 8px 3px #888888;  
+  margin-bottom: 10px;
+}
+/*Button body content*/
+
+
+.pageContent h1{
+  text-align: center;
+  font-size: 20px;
+}
+
+/**Course listing styles**/
+.courseEntry{
+  width: 31%;
+  margin-left: 1%;
+  margin-right: 1%;
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 16px;
+}
+
+.courseInfoTitle, .courseInfoTri{
+ text-align: left;
+}
+
+.courseInfoTitle{
+  font-weight: bold;
+}
+
+/**Indv course pages**/
+#indvCourseHead{
+  height: 40px;
+}
+#indvCourseHead h1{
+  display: inline-block;
+  float: left;
+  padding-left: 10px;
+  padding-top: 10px;
+
+}
+.break{
+  width: 20px;
+}
+#indvCourseButtons{
+  display: inline-block;
+  float: right;
+  padding-top: 15px;
+  padding-right: 15px;
+}
+#indvCourseButtons button{
+  margin-left: 10px;
+}
+#indvCourseOtherInfo, #indvCourseInfo{
+  margin-left: 20px;
+
+}
+#indvCourseOtherInfo{
+  padding-bottom: 10px;
+}
+#indvCourseInfo{  
+  width: 50%;
+  float: left;
+  padding-right: 10px;
+}
+#assignmentContainer{
+  padding-right: 20px;
+  padding-left: 10px;
+  overflow: hidden;
+}
+
+#assignmentTitle{
+  font-size: 20px;
+  padding-bottom: 10px;
+}
+.assignTimes{
+  display: inline-block;
+  margin-left: 20px;
+  padding-top: 13px;
+}
+.assignment{  
+  padding-left: 10px;
+  padding-bottom: 20px;
+}
+
+.assignbutton{
+  margin-top: 13px;
+  margin-left: 2px;
+}
+
+/**edit course page**/
+#editCourseContainer{
+  padding-left: 20px;
+}
+#editCourseForm input{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.editCourseEntryContainer{
+  font-weight: bold;
+  padding-top: 10px;
+}
+#lectInput{
+  width: 200px;
+}
+#idInput{
+  width: 100px;
+}
+
+.error{
+  padding-left: 20px;
+  color: red;
+  font-weight: bold;
+}
+.success{
+  padding-left: 20px;
+  color: #3ae314;
+  font-weight: bold;
+}
+
+/** FOOTER STYLES **/
+#footer     {
+  background-color: #3a3d38;
+  height: 60px;
+  margin-top: -100px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+
+}
+#footer a   {
+  color: white;
+  float: right;
+  padding-right: 10px;
+
+}
